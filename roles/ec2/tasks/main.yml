@@ -1,6 +1,9 @@
 ---
 - name:               Import Variables from VPC playbook
-  import_playbook:  roles\vpc\tasks\main.yml             
+  import_role:
+    name: vpc
+  vars:
+    public_subnet_a: public_subnet_a.subnet.id              
 
 - name:               Create the Ansible VPC
   ec2:
