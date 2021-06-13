@@ -10,7 +10,7 @@ vpc_name:       "Project"
 vpc_cidr_block: "10.0.0.0/16"
 
 # Security group rule: allows traffic from anywhere.
-sg_ip:          "0.0.0.0/0"
+sg_ip:          "0.0.0.0"
 
 # Subnets
 public_subnet_1_cidr:  "10.0.0.0/24"
