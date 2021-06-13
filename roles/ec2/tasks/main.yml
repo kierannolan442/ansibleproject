@@ -1,38 +1,12 @@
 ---
-- name: Create security group
-      ec2_group:
-        name: web_security_group
-        description: security group for web
-        aws_access_key: "{{aws_access_key}}"
-        aws_secret_key: "{{aws_secret_key}}"  
-        region: "{{region}}"
-        state: present
-        rules:
-          - proto: tcp
-            from_port: 22
-            to_port: 22
-            # This is not secure and allows SSH from anywhere, including aliens and monsters..Replace cidr_ip with your machines ip
-            cidr_ip: 0.0.0.0/0
-
-        # Outbound rules, we will only allow consumers to connect to kafka on its known port
-        rules_egress:
-          - proto: tcp
-            from_port: 80
-            to_port: 80
-            cidr_ip: 0.0.0.0/0
-      register: ec2_web_sg
-
 - name: create ec2 instance
       ec2:
         # If you do not have a key, check https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#prepare-key-pair
-        key_name: mySecretKey 
+        key_name: "{{ key_name }}" 
         instance_type: "{{instance_type}}"
         image: "{{image}}"
         wait: yes
-        region: "{{region}}"
-        group_id :
-          - "{{ec2_web_sg.group_id}}"          
+        region: "{{region}}"         
         assign_public_ip: yes
         aws_access_key: "{{aws_access_key}}"
         aws_secret_key: "{{aws_secret_key}}"  
-        vpc_subnet_id: "{{ec2_vpc.subnets.0.subnet_id}}"
