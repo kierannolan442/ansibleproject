@@ -1,7 +1,7 @@
 - name: Basic mysql provisioning example
   community.aws.rds:
     command: create
-    instance_name: Project Database
+    instance_name: Project
     db_engine: MySQL
     size: 20
     instance_type: db.t2.micro
