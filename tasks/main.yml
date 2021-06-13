@@ -81,7 +81,7 @@
  
  - name: Create EC2 server
    ec2:
-    image: ami-467ca739
+    image: ami-0ac43988dfd31ab9a
     wait: yes
     instance_type: t2.micro
     region: "{{ region }}"
