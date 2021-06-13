@@ -1,35 +1,19 @@
 ---
 
-############################
-# Used in parts 1, 2 and 3 #
-############################
-
-# AWS Credentials
+# AWS Credentials & region
 aws_access_key: "AKIAZFFEJ3XQFPLX2KXC"
 aws_secret_key: "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"
 aws_region:     "eu-west-1"
 
-# VPC Information
-vpc_name:       "My VPC"
+# VPC Name & IP block
+vpc_name:       "Project"
 vpc_cidr_block: "10.0.0.0/16"
 
-# For Security Group Rule
-my_ip:          "78.18.34.13"
+# Security group rule: allows traffic from anywhere.
+sg_ip:          "0.0.0.0/0"
 
 # Subnets
 public_subnet_1_cidr:  "10.0.0.0/24"
-
-############################
-# Used in parts 2 and 3    #
-############################
-
-# Subnets
 private_subnet_1_cidr: "10.0.1.0/24"
-
-############################
-# Used in part 3 only      #
-############################
-
-# Subnets
 public_subnet_2_cidr:  "10.0.10.0/24"
 private_subnet_2_cidr: "10.0.11.0/24"
