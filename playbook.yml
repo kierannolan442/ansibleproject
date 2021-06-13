@@ -3,4 +3,5 @@
 - hosts: local
   roles:
     - vpc
+    - rds
     - ec2

@@ -3,9 +3,11 @@
   import_role:
     name: vpc
   vars:
-    public_subnet_a: public_subnet_a.subnet.id              
+    public_subnet_a: public_subnet_a.subnet.id
+    public_subnet_b: public_subnet_b.subnet.id
+    security_group: main_sg.group_id              
 
-- name:               Create the Ansible VPC
+- name:               Create the Ansible EC2 Instances
   ec2:
     key_name:               "{{ key_name }}"
     instance_type:               "{{ instance_type }}"
@@ -15,4 +17,22 @@
     region:               "{{ aws_region }}"           
     aws_access_key:   "{{ aws_access_key }}"
     aws_secret_key:   "{{ aws_secret_key }}"
-  register: project_ec2
+    group: "{{ security_group }}"
+    instance_tags:
+       name: webserver
+  register: project_ec2_a
+
+- name:               Create the Ansible VPC
+  ec2:
+    key_name:               "{{ key_name }}"
+    instance_type:               "{{ instance_type }}"
+    image:               "{{ image }}"
+    vpc_subnet_id:               "{{ public_subnet_b.subnet.id }}"
+    wait:               yes
+    region:               "{{ aws_region }}"           
+    aws_access_key:   "{{ aws_access_key }}"
+    aws_secret_key:   "{{ aws_secret_key }}"
+    group: "{{ main_sg.group_id }}"
+    instance_tags:
+       name: webserver
+  register: project_ec2_b
