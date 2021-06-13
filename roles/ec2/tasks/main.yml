@@ -1,12 +1,13 @@
 ---
-- name: create ec2 instance
-      ec2:
-        # If you do not have a key, check https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#prepare-key-pair
-        key_name: "{{ key_name }}" 
-        instance_type: "{{instance_type}}"
-        image: "{{image}}"
-        wait: yes
-        region: "{{region}}"         
-        assign_public_ip: yes
-        aws_access_key: "{{aws_access_key}}"
-        aws_secret_key: "{{aws_secret_key}}"  
+
+
+- name:               Create the Ansible VPC
+  ec2:
+    key_name:               "{{ key_name }}"
+    instance_type:               "{{ instance_type }}"
+    image:               "{{ image }}"
+    wait:               yes
+    region:               "{{ region }}"           
+    aws_access_key:   "{{ aws_access_key }}"
+    aws_secret_key:   "{{ aws_secret_key }}"
+  register: project_ec2
