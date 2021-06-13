@@ -1,11 +1,13 @@
 ---
-
+- name:               Import Variables from VPC playbook
+  import_playbook:  roles\vpc\tasks\main.yml             
 
 - name:               Create the Ansible VPC
   ec2:
     key_name:               "{{ key_name }}"
     instance_type:               "{{ instance_type }}"
     image:               "{{ image }}"
+    vpc_subnet_id:               "{{ public_subnet_a.subnet.id }}"
     wait:               yes
     region:               "{{ aws_region }}"           
     aws_access_key:   "{{ aws_access_key }}"
