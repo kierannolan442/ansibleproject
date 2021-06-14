@@ -1,0 +1,19 @@
+- hosts: all
+  become: yes
+  remote_user: ec2-user  //login as this user in the instance
+  tasks:
+- name: Download Httpd ,Nginx and Git in remote system
+        package:
+         name:
+           - httpd
+           - git
+           - nginx
+         state: present
+#- name: Clone code from GitHub
+        #git:
+         #repo: 'https://username:password@github.com/poojan1812/Ansible.git'
+         #dest: "/var/www/html/"
+- name: start the services of httpd
+        service:
+         name: "httpd"
+         state: restarted
