@@ -8,6 +8,7 @@
 
 - name:               Create the Ansible EC2 Instances
   ec2:
+    assign_public_ip: true
     key_name:               "{{ key_name }}"
     instance_type:               "{{ instance_type }}"
     image:               "{{ image }}"
@@ -22,6 +23,7 @@
 
 - name:               Create the Ansible VPC
   ec2:
+    assign_public_ip: true
     key_name:               "{{ key_name }}"
     instance_type:               "{{ instance_type }}"
     image:               "{{ image }}"
@@ -36,4 +38,3 @@
 
 - name: add new instance to host group at runtime
   add_host: hostname={{ ec2.instances[0].public_ip }} groupname=tag_{{ item.key }}_{{ item.value }}
-  with_dict: dict

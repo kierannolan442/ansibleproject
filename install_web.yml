@@ -1,4 +1,4 @@
-- hosts: all
+- hosts: webserver
   become: yes
   remote_user: ec2-user  //login as this user in the instance
   tasks:
