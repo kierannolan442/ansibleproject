@@ -112,11 +112,11 @@
     aws_secret_key: "{{ aws_secret_key }}"
     resource_tags:
       Name: "Database Subnet B"
-  register: database_subnet_a
+  register: database_subnet_b
 
 - name: Output - Database Subnet B
   set_fact:
-    private_subnet_b_id: "{{ database_subnet_b.subnet.id }}"
+    database_subnet_b_id: "{{ database_subnet_b.subnet.id }}"
 
 #Creating the internet gateway to allow internet access to the VPC
 - name: Create - Internet Gateway
