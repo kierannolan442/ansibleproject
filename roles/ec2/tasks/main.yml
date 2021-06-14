@@ -34,14 +34,6 @@
        name: webserver
   register: project_ec2_b
 
-- name: Add new instance to host group
-            add_host:
-                    hostname: "{{ item.public_ip }}"
-                    groupname: webserver
-            loop: "{{ ec2.instances }}"
-          - name: Wait for SSH to come up
-            wait_for:
-                    host: "{{ item.public_dns_name }}"
-                    port: 22
-                    state: started
-            loop: "{{ ec2.instances }}"
+- name: add new instance to host group at runtime
+  add_host: hostname={{ ec2.instances[0].public_ip }} groupname=tag_{{ item.key }}_{{ item.value }}
+  with_dict: dict
