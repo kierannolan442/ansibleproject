@@ -199,7 +199,7 @@
       - proto: "tcp"
         from_port: "22"
         to_port: "22"
-        cidr_ip: "{{ public_sg_ip }}/0"
+        cidr_ip: "{{ sg_ip }}/0"
       - proto: tcp
         from_port: "3306"
         to_port: "3306"
