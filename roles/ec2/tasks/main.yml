@@ -1,40 +1,69 @@
 ---
-- name:               Import Variables from VPC playbook
+# Importing subnet variables to use for instances
+- name: Import - Subnet Variables
   import_role:
     name: vpc
   vars:
     public_subnet_a: public_subnet_a.subnet.id
-    public_subnet_b: public_subnet_b.subnet.id          
+    public_subnet_b: public_subnet_b.subnet.id
+    private_subnet_a: private_subnet_a.subnet.id
+    private_subnet_b: private_subnet_b.subnet.id          
 
-- name:               Create the Ansible EC2 Instances
+
+#Bastion Hosts
+- name: Create Availability Zone A Bastion Host
   ec2:
-    assign_public_ip: true
-    key_name:               "{{ key_name }}"
-    instance_type:               "{{ instance_type }}"
-    image:               "{{ image }}"
-    vpc_subnet_id:               "{{ public_subnet_a.subnet.id }}"
-    wait:               yes
-    region:               "{{ aws_region }}"           
-    aws_access_key:   "{{ aws_access_key }}"
-    aws_secret_key:   "{{ aws_secret_key }}"
+    key_name: "{{ bastion_key_name }}"
+    instance_type: "{{ instance_type }}"
+    image: "{{ image }}"
+    vpc_subnet_id: "{{ public_subnet_a.subnet.id }}"
+    wait: yes
+    region: "{{ aws_region }}"           
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
     instance_tags:
-       name: webserver
+       name: webservera
   register: project_ec2_a
 
-- name:               Create the Ansible VPC
+- name: Create Availability Zone B Bastion Host
   ec2:
-    assign_public_ip: true
-    key_name:               "{{ key_name }}"
-    instance_type:               "{{ instance_type }}"
-    image:               "{{ image }}"
-    vpc_subnet_id:               "{{ public_subnet_b.subnet.id }}"
-    wait:               yes
-    region:               "{{ aws_region }}"           
-    aws_access_key:   "{{ aws_access_key }}"
-    aws_secret_key:   "{{ aws_secret_key }}"
+    key_name: "{{ bastion_key_name }}"
+    instance_type: "{{ instance_type }}"
+    image: "{{ image }}"
+    vpc_subnet_id: "{{ public_subnet_b.subnet.id }}"
+    wait: yes
+    region: "{{ aws_region }}"           
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
     instance_tags:
-       name: webserver
-  register: project_ec2_b
+       name: webservera
+  register: project_ec2_a
 
-- name: add new instance to host group at runtime
-  add_host: hostname={{ ec2.instances[0].public_ip }} groupname=tag_{{ item.key }}_{{ item.value }}
+# Webserver instances
+- name: Create Availability Zone A Webserver
+  ec2:
+    key_name: "{{ web_key_name }}"
+    instance_type: "{{ instance_type }}"
+    image: "{{ image }}"
+    vpc_subnet_id: "{{ private_subnet_a.subnet.id }}"
+    wait: yes
+    region: "{{ aws_region }}"           
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+    instance_tags:
+       name: webservera
+  register: project_ec2_a
+
+- name: Create Availability Zone B webserver
+  ec2:
+    key_name: "{{ key_name }}"
+    instance_type: "{{ instance_type }}"
+    image: "{{ image }}"
+    vpc_subnet_id: "{{ private_subnet_b.subnet.id }}"
+    wait: yes
+    region: "{{ aws_region }}"           
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+    instance_tags:
+       name: webserverb
+  register: project_ec2_b

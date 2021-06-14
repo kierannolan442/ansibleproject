@@ -1,13 +1,25 @@
-- name: Basic mysql provisioning example
+---
+
+# Importing variables to use for instances
+- name: Import - Subnet & SG Variables
+  import_role:
+    name: vpc
+  vars:
+    database_subnet_a: database_subnet_a.subnet.id
+    database_sg_id: database_sg.group_id
+
+- name: Create - Ansible MySQL Instance
   community.aws.rds:
     command: create
-    instance_name: Project
+    instance_name: AnsibleDB
     db_engine: MySQL
-    size: 20
+    port: 3306
     instance_type: db.t2.micro
     username: admin
     password: password
+    subnet: "{{ database_subnet_a.subnet.id }}"
+    vpc_security_groups: "{{ database_sg.group_id }}"
     aws_access_key:   "{{ aws_access_key }}"
     aws_secret_key:   "{{ aws_secret_key }}"
     region: "{{ aws_region }}"
-  register: project_rds
+  register: ansible_rds

@@ -1,106 +1,138 @@
 ---
-
-
-- name:               Create the Ansible VPC
+# Creating the VPC
+- name: Create - Ansible VPC
   ec2_vpc_net:
-    name:             "{{ vpc_name }}"
-    cidr_block:       "{{ vpc_cidr_block }}"
-    region:           "{{ aws_region }}"
-    aws_access_key:   "{{ aws_access_key }}"
-    aws_secret_key:   "{{ aws_secret_key }}"
-    state:            "present"
+    name: "{{ vpc_name }}"
+    cidr_block: "{{ vpc_cidr_block }}"
+    region: "{{ aws_region }}"
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+    state: "present"
   register: project_vpc
 
-- name:               VPC Output
+- name: Output - Ansible VPC
   set_fact:
-    vpc_id:           "{{ project_vpc.vpc.id }}"
+    vpc_id: "{{ project_vpc.vpc.id }}"
 
-#Subnets - Private and public subnet in Availability Zones A & B
-- name:               Create Public Subnet 1
+#Availability Zone A subnets
+- name: Create - Public Subnet A
   ec2_vpc_subnet:
-    state:            "present"
-    vpc_id:           "{{ vpc_id }}"
-    cidr:             "10.0.1.0/24"
-    az:               "{{ aws_region }}a"
-    region:           "{{ aws_region }}"
-    aws_access_key:   "{{ aws_access_key }}"
-    aws_secret_key:   "{{ aws_secret_key }}"
+    state: "present"
+    vpc_id: "{{ vpc_id }}"
+    cidr: "{{ public_subnet_a_cidr }}"
+    region: "{{ aws_region }}"
+    az: "{{ aws_region }}a"
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
     resource_tags:
-      Name:           "Public Subnet 1"
+      Name: "Public Subnet A"
   register: public_subnet_a
 
-- name:               Output public subnet 1
+- name: Output - Public Subnet A
   set_fact:
     public_subnet_a_id: "{{ public_subnet_a.subnet.id }}"
 
-- name:               Create Private Subnet 1
+- name: Create - Private Subnet A
   ec2_vpc_subnet:
-    state:            "present"
-    vpc_id:           "{{ vpc_id }}"
-    cidr:             "10.0.2.0/24"
-    az:               "{{ aws_region }}a"
-    region:           "{{ aws_region }}"
-    aws_access_key:   "{{ aws_access_key }}"
-    aws_secret_key:   "{{ aws_secret_key }}"
+    state: "present"
+    vpc_id: "{{ vpc_id }}"
+    cidr: "{{ private_subnet_a_cidr }}"
+    region: "{{ aws_region }}"
+    az: "{{ aws_region }}a"
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
     resource_tags:
-      Name:           "Private Subnet 1"
+      Name: "Private Subnet A"
   register: private_subnet_a
 
-- name:               Output private subnet 1
+- name: Output - Private Subnet A
   set_fact:
     private_subnet_a_id: "{{ private_subnet_a.subnet.id }}"
 
-- name:               Create Public Subnet 2
+- name: Create - Database Subnet A
   ec2_vpc_subnet:
-    state:            "present"
-    vpc_id:           "{{ vpc_id }}"
-    cidr:             "10.0.11.0/24"
-    az:               "{{ aws_region }}b"
-    region:           "{{ aws_region }}"
-    aws_access_key:   "{{ aws_access_key }}"
-    aws_secret_key:   "{{ aws_secret_key }}"
+    state: "present"
+    vpc_id: "{{ vpc_id }}"
+    cidr: "{{ database_subnet_a_cidr }}"
+    region: "{{ aws_region }}"
+    az: "{{ aws_region }}a"
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
     resource_tags:
-      Name:           "Public Subnet 2"
+      Name: "Database Subnet A"
+  register: database_subnet_a
+
+- name: Output - Database Subnet A
+  set_fact:
+    database_subnet_a_id: "{{ database_subnet_a.subnet.id }}"
+
+#Availability Zone B Subnets
+- name: Create - Public Subnet B
+  ec2_vpc_subnet:
+    state: "present"
+    vpc_id: "{{ vpc_id }}"
+    cidr: "{{ public_subnet_b_cidr }}"
+    region: "{{ aws_region }}"
+    az: "{{ aws_region }}b"
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+    resource_tags:
+      Name: "Public Subnet B"
   register: public_subnet_b
 
-- name:               Public subnet 2 output
+- name: Output - Public subnet B
   set_fact:
     public_subnet_b_id: "{{ public_subnet_b.subnet.id }}"
 
-- name:               Create Private Subnet 2
+- name: Create - Private Subnet B
   ec2_vpc_subnet:
-    state:            "present"
-    vpc_id:           "{{ vpc_id }}"
-    cidr:             "10.0.12.0/24"
-    az:               "{{ aws_region }}b"
-    region:           "{{ aws_region }}"
-    aws_access_key:   "{{ aws_access_key }}"
-    aws_secret_key:   "{{ aws_secret_key }}"
+    state: "present"
+    vpc_id: "{{ vpc_id }}"
+    cidr: "{{ private_subnet_b_cidr }}"
+    region: "{{ aws_region }}"
+    az: "{{ aws_region }}b"
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
     resource_tags:
-      Name:           "Private Subnet 2"
+      Name: "Private Subnet B"
   register: private_subnet_b
 
-- name:               Output private subnet 2
+- name: Output - Private Subnet B
   set_fact:
     private_subnet_b_id: "{{ private_subnet_b.subnet.id }}"
 
+- name: Create - Database Subnet B
+  ec2_vpc_subnet:
+    state: "present"
+    vpc_id: "{{ vpc_id }}"
+    cidr: "{{ database_subnet_b_cidr }}"
+    region: "{{ aws_region }}"
+    az: "{{ aws_region }}a"
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+    resource_tags:
+      Name: "Database Subnet B"
+  register: database_subnet_a
+
+- name: Output - Database Subnet B
+  set_fact:
+    private_subnet_b_id: "{{ database_subnet_b.subnet.id }}"
 
 #Creating the internet gateway to allow internet access to the VPC
-
-- name:               Create Internet Gateway for VPC
+- name: Create - Internet Gateway
   ec2_vpc_igw:
-    vpc_id:           "{{ vpc_id }}"
-    region:           "{{ aws_region }}"
-    aws_access_key:   "{{ aws_access_key }}"
-    aws_secret_key:   "{{ aws_secret_key }}"
-    state:            "present"
+    vpc_id: "{{ vpc_id }}"
+    region: "{{ aws_region }}"
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+    state: "present"
   register: vpc_igw
 
-- name:               Set Internet Gateway ID in variable
+- name: Output - IGW
   set_fact:
-    igw_id:           "{{ vpc_igw.gateway_id }}"
+    igw_id: "{{ vpc_igw.gateway_id }}"
 
-- name: Set up public subnet route table
+- name: Create - Public Subnet Route Table
   ec2_vpc_route_table:
     vpc_id: "{{ vpc_id }}"
     region: "{{ aws_region }}"
@@ -117,7 +149,7 @@
 
 
 # This section creates the security groups for public subnets. 
-- name: Create Security Group
+- name: Create - Public Subnet Security Group
   ec2_group:
     name: "SSH Access"
     description: "Allowing SSH traffic"
@@ -129,16 +161,16 @@
       - proto: "tcp"
         from_port: "22"
         to_port: "22"
-        cidr_ip: "{{ sg_ip }}/32"
-  register: main_sg
+        cidr_ip: "{{ sg_ip }}/0"
+  register: public_sg
 
-- name: Set Main SG ID
+- name: Output - Public Subnet Security Group 
   set_fact:
-    main_sg_id: "{{ main_sg.group_id }}"
+    public_sg_id: "{{ public_sg.group_id }}"
 
-- name: Create Security Group for Private subnets
+- name: Create - Private Subnet Security Group
   ec2_group:
-    name: "Private Security Group"
+    name: "Private Subnet Security Group"
     description: "Private Security Group"
     vpc_id: "{{ vpc_id }}"
     region: "{{ aws_region }}"
@@ -148,4 +180,31 @@
       - proto: "tcp"
         from_port: "22"
         to_port: "22"
-        group_id: "{{ main_sg_id }}"
+        group_id: "{{ public_sg_id }}"
+
+- name: Output - Private Subnet Security Group 
+  set_fact:
+    private_sg_id: "{{ private_sg.group_id }}"
+
+- name: Create - Database Subnet Security Group
+  ec2_group:
+    name: "SSH & Private Subnet Access"
+    description: "Allowing SSH traffic"
+    vpc_id: "{{ vpc_id }}"
+    region: "{{ aws_region }}"
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+    rules:
+      - proto: "tcp"
+        from_port: "22"
+        to_port: "22"
+        cidr_ip: "{{ public_sg_ip }}/0"
+      - proto: tcp
+        from_port: "3306"
+        to_port: "3306"
+        cidr_ip: "{{ private_sg_ip }}/0"
+  register: database_sg
+
+- name: Output - Database Subnet Security Group 
+  set_fact:
+    database_sg_id: "{{ database_sg.group_id }}"
