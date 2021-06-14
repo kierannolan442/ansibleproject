@@ -203,7 +203,7 @@
       - proto: tcp
         from_port: "3306"
         to_port: "3306"
-        cidr_ip: "{{ private_sg_ip }}/0"
+        cidr_ip: "{{ sg_ip }}/0"
   register: database_sg
 
 - name: Output - Database Subnet Security Group 
