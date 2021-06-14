@@ -22,8 +22,8 @@
     aws_access_key: "{{ aws_access_key }}"
     aws_secret_key: "{{ aws_secret_key }}"
     instance_tags:
-       name: webservera
-  register: project_ec2_a
+       Name: bastionhostA
+  register: project_bastion_a
 
 - name: Create Availability Zone B Bastion Host
   ec2:
@@ -36,8 +36,8 @@
     aws_access_key: "{{ aws_access_key }}"
     aws_secret_key: "{{ aws_secret_key }}"
     instance_tags:
-       name: webservera
-  register: project_ec2_a
+       Name: bastionhostB
+  register: project_bastion_a
 
 # Webserver instances
 - name: Create Availability Zone A Webserver
@@ -51,8 +51,8 @@
     aws_access_key: "{{ aws_access_key }}"
     aws_secret_key: "{{ aws_secret_key }}"
     instance_tags:
-       name: webservera
-  register: project_ec2_a
+       Name: webserverA
+  register: project_web_a
 
 - name: Create Availability Zone B webserver
   ec2:
@@ -65,5 +65,5 @@
     aws_access_key: "{{ aws_access_key }}"
     aws_secret_key: "{{ aws_secret_key }}"
     instance_tags:
-       name: webserverb
-  register: project_ec2_b
+       Name: webserverB
+  register: project_web_b

@@ -49,23 +49,6 @@
   set_fact:
     private_subnet_a_id: "{{ private_subnet_a.subnet.id }}"
 
-- name: Create - Database Subnet A
-  ec2_vpc_subnet:
-    state: "present"
-    vpc_id: "{{ vpc_id }}"
-    cidr: "{{ database_subnet_a_cidr }}"
-    region: "{{ aws_region }}"
-    az: "{{ aws_region }}a"
-    aws_access_key: "{{ aws_access_key }}"
-    aws_secret_key: "{{ aws_secret_key }}"
-    resource_tags:
-      Name: "Database Subnet A"
-  register: database_subnet_a
-
-- name: Output - Database Subnet A
-  set_fact:
-    database_subnet_a_id: "{{ database_subnet_a.subnet.id }}"
-
 #Availability Zone B Subnets
 - name: Create - Public Subnet B
   ec2_vpc_subnet:
@@ -101,23 +84,6 @@
   set_fact:
     private_subnet_b_id: "{{ private_subnet_b.subnet.id }}"
 
-- name: Create - Database Subnet B
-  ec2_vpc_subnet:
-    state: "present"
-    vpc_id: "{{ vpc_id }}"
-    cidr: "{{ database_subnet_b_cidr }}"
-    region: "{{ aws_region }}"
-    az: "{{ aws_region }}a"
-    aws_access_key: "{{ aws_access_key }}"
-    aws_secret_key: "{{ aws_secret_key }}"
-    resource_tags:
-      Name: "Database Subnet B"
-  register: database_subnet_b
-
-- name: Output - Database Subnet B
-  set_fact:
-    database_subnet_b_id: "{{ database_subnet_b.subnet.id }}"
-
 #Creating the internet gateway to allow internet access to the VPC
 - name: Create - Internet Gateway
   ec2_vpc_igw:
@@ -132,6 +98,35 @@
   set_fact:
     igw_id: "{{ vpc_igw.gateway_id }}"
 
+
+#NAT Gateways
+- name: Create - NAT A
+  community.aws.ec2_vpc_nat_gateway:
+    state: present
+    subnet_id: "{{ public_subnet_a_id }}"
+    wait: true
+    region: "{{ aws_region }}"
+    if_exist_do_not_create: true
+  register: nat_gateway_a
+
+- name: Output - NAT Gateway A
+  set_fact:
+    nat_a_id: "{{ nat_a_id.gateway_id }}"
+
+- name: Create - NAT B.
+  community.aws.ec2_vpc_nat_gateway:
+    state: present
+    subnet_id: "{{ public_subnet_b_id }}"
+    wait: true
+    region: "{{ aws_region }}"
+    if_exist_do_not_create: true
+  register: nat_gateway_b
+
+- name: Output - NAT Gateway B
+  set_fact:
+    nat_b_id: "{{ nat_b_id.gateway_id }}"
+
+# Route Tables
 - name: Create - Public Subnet Route Table
   ec2_vpc_route_table:
     vpc_id: "{{ vpc_id }}"
@@ -147,34 +142,33 @@
       - dest: "0.0.0.0/0"
         gateway_id: "{{ igw_id }}"
 
-#- name: Create - Private Subnet A Route Table
- # ec2_vpc_route_table:
-  #  vpc_id: "{{ vpc_id }}"
-   # region: "{{ aws_region }}"
-    #aws_access_key: "{{ aws_access_key }}"
-    #aws_secret_key: "{{ aws_secret_key }}"
-    #tags:
-     # Name: "Private"
-    #subnets:
-     # - "{{ private_subnet_a_id }}"
-    #routes:
-     # - dest: "0.0.0.0/0"
-      #  gateway_id: "{{ igw_id }}"
-
-- name: Create - Database Subnet Route Table
+- name: Create - Private Subnet A Route Table
   ec2_vpc_route_table:
     vpc_id: "{{ vpc_id }}"
     region: "{{ aws_region }}"
     aws_access_key: "{{ aws_access_key }}"
     aws_secret_key: "{{ aws_secret_key }}"
     tags:
-      Name: "Public"
+      Name: "Private A"
     subnets:
-      - "{{ database_subnet_a_id }}"
-      - "{{ database_subnet_b_id }}"
+      - "{{ private_subnet_a_id }}"
     routes:
       - dest: "0.0.0.0/0"
+        gateway_id: "{{ nat_a_id }}"
 
+- name: Create - Private Subnet B Route Table
+  ec2_vpc_route_table:
+    vpc_id: "{{ vpc_id }}"
+    region: "{{ aws_region }}"
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+    tags:
+      Name: "Private B"
+    subnets:
+      - "{{ private_subnet_b_id }}"
+    routes:
+      - dest: "0.0.0.0/0"
+        gateway_id: "{{ nat_b_id }}"
 
 # This section creates the security groups for public subnets. 
 - name: Create - Public Subnet Security Group
@@ -215,25 +209,3 @@
   set_fact:
     private_sg_id: "{{ private_sg.group_id }}"
 
-- name: Create - Database Subnet Security Group
-  ec2_group:
-    name: "SSH & Private Subnet Access"
-    description: "Allowing SSH traffic"
-    vpc_id: "{{ vpc_id }}"
-    region: "{{ aws_region }}"
-    aws_access_key: "{{ aws_access_key }}"
-    aws_secret_key: "{{ aws_secret_key }}"
-    rules:
-      - proto: "tcp"
-        from_port: "22"
-        to_port: "22"
-        cidr_ip: "{{ sg_ip }}/0"
-      - proto: tcp
-        from_port: "3306"
-        to_port: "3306"
-        cidr_ip: "{{ sg_ip }}/0"
-  register: database_sg
-
-- name: Output - Database Subnet Security Group 
-  set_fact:
-    database_sg_id: "{{ database_sg.group_id }}"
