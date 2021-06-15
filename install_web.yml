@@ -1,32 +1,5 @@
 ---
-- name: Install nginx
-  hosts: webserver
-  become: yes
 
-  tasks:
-
-  - name: Install epel
-    yum_repository:
-      name: epel-release
-      description: epel
-      state: present
-      baseurl: https://download.fedoraproject.org/pub/epel/$releasever/$basearch/
-
-  - name: Install nginx
-    package: name=nginx state=present
-
-  - name: Start NGINX
-    service:
-      name: nginx
-      state: started
-      enabled: yes
-
-  - name: Copy NGINX 
-    template:
-      src: index.html
-      dest: "/etc/nginx/nginx.conf"
-      owner: root
-      group: root
-      mode: 0644
-    notify:
-      - reload nginx
+- hosts: webserver
+  roles:
+    - webserver
