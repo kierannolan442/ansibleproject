@@ -40,30 +40,30 @@
   register: project_bastion_a
 
 # Webserver instances
-- name: Create Availability Zone A Webserver
-  ec2:
-    key_name: "{{ web_key_name }}"
-    instance_type: "{{ instance_type }}"
-    image: "{{ image }}"
-    vpc_subnet_id: "{{ private_subnet_a.subnet.id }}"
-    wait: yes
-    region: "{{ aws_region }}"           
-    aws_access_key: "{{ aws_access_key }}"
-    aws_secret_key: "{{ aws_secret_key }}"
-    instance_tags:
-       Name: webserverA
-  register: project_web_a
+#- name: Create Availability Zone A Webserver
+ # ec2:
+  #  key_name: "{{ web_key_name }}"
+   # instance_type: "{{ instance_type }}"
+    #image: "{{ image }}"
+    #vpc_subnet_id: "{{ private_subnet_a.subnet.id }}"
+    #wait: yes
+    #region: "{{ aws_region }}"           
+    #aws_access_key: "{{ aws_access_key }}"
+    #aws_secret_key: "{{ aws_secret_key }}"
+    #instance_tags:
+     #  Name: webserverA
+  #register: project_web_a
 
-- name: Create Availability Zone B webserver
-  ec2:
-    key_name: "{{ key_name }}"
-    instance_type: "{{ instance_type }}"
-    image: "{{ image }}"
-    vpc_subnet_id: "{{ private_subnet_b.subnet.id }}"
-    wait: yes
-    region: "{{ aws_region }}"           
-    aws_access_key: "{{ aws_access_key }}"
-    aws_secret_key: "{{ aws_secret_key }}"
-    instance_tags:
-       Name: webserverB
-  register: project_web_b
+#- name: Create Availability Zone B webserver
+ # ec2:
+  #  key_name: "{{ key_name }}"
+   # instance_type: "{{ instance_type }}"
+    #image: "{{ image }}"
+    #vpc_subnet_id: "{{ private_subnet_b.subnet.id }}"
+    #wait: yes
+    #region: "{{ aws_region }}"           
+    #aws_access_key: "{{ aws_access_key }}"
+    #aws_secret_key: "{{ aws_secret_key }}"
+    #instance_tags:
+     #  Name: webserverB
+  #register: project_web_b

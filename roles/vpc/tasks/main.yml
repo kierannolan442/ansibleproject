@@ -100,31 +100,31 @@
 
 
 #NAT Gateways
-- name: Create - NAT A
-  community.aws.ec2_vpc_nat_gateway:
-    state: present
-    subnet_id: "{{ public_subnet_a_id }}"
-    wait: true
-    region: "{{ aws_region }}"
-    if_exist_do_not_create: true
-  register: nat_gateway_a
+#- name: Create - NAT A
+  #community.aws.ec2_vpc_nat_gateway:
+    #state: present
+    #subnet_id: "{{ public_subnet_a_id }}"
+    #wait: true
+    #region: "{{ aws_region }}"
+   # if_exist_do_not_create: true
+  #register: nat_gateway_a
 
-- name: Output - NAT Gateway A
-  set_fact:
-    nat_a_id: "{{ nat_a_id.gateway_id }}"
+#- name: Output - NAT Gateway A
+ # set_fact:
+  #  nat_a_id: "{{ nat_a_id.gateway_id }}"
 
-- name: Create - NAT B.
-  community.aws.ec2_vpc_nat_gateway:
-    state: present
-    subnet_id: "{{ public_subnet_b_id }}"
-    wait: true
-    region: "{{ aws_region }}"
-    if_exist_do_not_create: true
-  register: nat_gateway_b
+#- name: Create - NAT B.
+ # community.aws.ec2_vpc_nat_gateway:
+  #  state: present
+   # subnet_id: "{{ public_subnet_b_id }}"
+    #wait: true
+    #region: "{{ aws_region }}"
+    #if_exist_do_not_create: true
+  #register: nat_gateway_b
 
-- name: Output - NAT Gateway B
-  set_fact:
-    nat_b_id: "{{ nat_b_id.gateway_id }}"
+#- name: Output - NAT Gateway B
+ # set_fact:
+  #  nat_b_id: "{{ nat_b_id.gateway_id }}"
 
 # Route Tables
 - name: Create - Public Subnet Route Table
@@ -154,7 +154,7 @@
       - "{{ private_subnet_a_id }}"
     routes:
       - dest: "0.0.0.0/0"
-        gateway_id: "{{ nat_a_id }}"
+        #gateway_id: "{{ nat_a_id }}"
 
 - name: Create - Private Subnet B Route Table
   ec2_vpc_route_table:
@@ -168,7 +168,7 @@
       - "{{ private_subnet_b_id }}"
     routes:
       - dest: "0.0.0.0/0"
-        gateway_id: "{{ nat_b_id }}"
+        #gateway_id: "{{ nat_b_id }}"
 
 # This section creates the security groups for public subnets. 
 - name: Create - Public Subnet Security Group
