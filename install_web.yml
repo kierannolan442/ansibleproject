@@ -13,8 +13,20 @@
       baseurl: https://download.fedoraproject.org/pub/epel/$releasever/$basearch/
 
   - name: Install nginx
-    yum_repository:
+    package: name=nginx state=present
+
+  - name: Start NGINX
+    service:
       name: nginx
-      description: Nginx repository
-      state: present
-      baseurl: http://nginx.org/packages/centos/$releasever/$basearch/
+      state: started
+      enabled: yes
+
+  - name: Copy NGINX 
+    template:
+      src: index.html
+      dest: "/etc/nginx/nginx.conf"
+      owner: root
+      group: root
+      mode: 0644
+    notify:
+      - reload nginx
