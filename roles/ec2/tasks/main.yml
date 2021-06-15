@@ -18,6 +18,7 @@
     assign_public_ip: yes
     image: "{{ image }}"
     vpc_subnet_id: "{{ public_subnet_a.subnet.id }}"
+    zone: "{{ aws_region }}a"
     wait: yes
     region: "{{ aws_region }}"           
     aws_access_key: "{{ aws_access_key }}"
@@ -33,6 +34,7 @@
     assign_public_ip: yes
     image: "{{ image }}"
     vpc_subnet_id: "{{ public_subnet_b.subnet.id }}"
+    zone: "{{ aws_region }}b"
     wait: yes
     region: "{{ aws_region }}"           
     aws_access_key: "{{ aws_access_key }}"
