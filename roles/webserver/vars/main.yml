@@ -1,6 +1,5 @@
 ---
 # vars file for webserver
----
 # Supported NGINX Open Source distributions
 # https://nginx.org/en/docs/install.html
 nginx_distributions: [
