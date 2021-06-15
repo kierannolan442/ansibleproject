@@ -15,6 +15,7 @@
   ec2:
     key_name: "{{ bastion_key_name }}"
     instance_type: "{{ instance_type }}"
+    assign_public_ip: yes
     image: "{{ image }}"
     vpc_subnet_id: "{{ public_subnet_a.subnet.id }}"
     wait: yes
@@ -29,6 +30,7 @@
   ec2:
     key_name: "{{ bastion_key_name }}"
     instance_type: "{{ instance_type }}"
+    assign_public_ip: yes
     image: "{{ image }}"
     vpc_subnet_id: "{{ public_subnet_b.subnet.id }}"
     wait: yes

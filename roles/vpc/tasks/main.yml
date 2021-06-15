@@ -142,32 +142,32 @@
       - dest: "0.0.0.0/0"
         gateway_id: "{{ igw_id }}"
 
-- name: Create - Private Subnet A Route Table
-  ec2_vpc_route_table:
-    vpc_id: "{{ vpc_id }}"
-    region: "{{ aws_region }}"
-    aws_access_key: "{{ aws_access_key }}"
-    aws_secret_key: "{{ aws_secret_key }}"
-    tags:
-      Name: "Private A"
-    subnets:
-      - "{{ private_subnet_a_id }}"
-    routes:
-      - dest: "0.0.0.0/0"
+#- name: Create - Private Subnet A Route Table
+  #ec2_vpc_route_table:
+    #vpc_id: "{{ vpc_id }}"
+    #region: "{{ aws_region }}"
+    #aws_access_key: "{{ aws_access_key }}"
+    #aws_secret_key: "{{ aws_secret_key }}"
+    #tags:
+     # Name: "Private A"
+    #subnets:
+     # - "{{ private_subnet_a_id }}"
+    #routes:
+      #- dest: "0.0.0.0/0"
         #gateway_id: "{{ nat_a_id }}"
 
-- name: Create - Private Subnet B Route Table
-  ec2_vpc_route_table:
-    vpc_id: "{{ vpc_id }}"
-    region: "{{ aws_region }}"
-    aws_access_key: "{{ aws_access_key }}"
-    aws_secret_key: "{{ aws_secret_key }}"
-    tags:
-      Name: "Private B"
-    subnets:
-      - "{{ private_subnet_b_id }}"
-    routes:
-      - dest: "0.0.0.0/0"
+#- name: Create - Private Subnet B Route Table
+ # ec2_vpc_route_table:
+  #  vpc_id: "{{ vpc_id }}"
+   # region: "{{ aws_region }}"
+    #aws_access_key: "{{ aws_access_key }}"
+    #aws_secret_key: "{{ aws_secret_key }}"
+    #tags:
+     # Name: "Private B"
+    #subnets:
+     # - "{{ private_subnet_b_id }}"
+    #routes:
+     # - dest: "0.0.0.0/0"
         #gateway_id: "{{ nat_b_id }}"
 
 # This section creates the security groups for public subnets. 
