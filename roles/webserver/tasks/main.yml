@@ -1,0 +1,16 @@
+---
+# tasks file for webserver
+- name: Install httpd package
+  package:
+      name: "{{ pkg_name }}"
+      state: present
+
+- name: Copying the webpage
+  template:
+     dest: "/var/www/html/index.html"
+     src: "index.html"
+
+- name: Start httpd service
+  service:
+    name: "{{ pkg_name }}"
+    state: started

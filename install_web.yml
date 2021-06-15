@@ -1,25 +1,20 @@
 ---
 - name: Install nginx
   hosts: webserver
-  become: true
+  become: yes
 
   tasks:
-  - name: Add epel-release repo
-    yum:
+
+  - name: Install epel
+    yum_repository:
       name: epel-release
+      description: epel
       state: present
+      baseurl: https://download.fedoraproject.org/pub/epel/$releasever/$basearch/
 
   - name: Install nginx
-    yum:
+    yum_repository:
       name: nginx
+      description: Nginx repository
       state: present
-
-  - name: Insert Index Page
-    template:
-      src: index.html
-      dest: /usr/share/nginx/html/index.html
-
-  - name: Start NGiNX
-    service:
-      name: nginx
-      state: started
+      baseurl: http://nginx.org/packages/centos/$releasever/$basearch/
