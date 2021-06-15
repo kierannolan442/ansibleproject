@@ -171,7 +171,7 @@
         #gateway_id: "{{ nat_b_id }}"
 
 # This section creates the security groups for public subnets. 
-- name: Create - Public Subnet Security Group
+- name: Create - Public Security Group
   ec2_group:
     name: "SSH Access"
     description: "Allowing SSH traffic"
@@ -190,7 +190,7 @@
   set_fact:
     public_sg_id: "{{ public_sg.group_id }}"
 
-- name: Create - Private Subnet Security Group
+- name: Create - Private Security Group
   ec2_group:
     name: "Private Subnet Security Group"
     description: "Private Security Group"
@@ -202,6 +202,10 @@
       - proto: "tcp"
         from_port: "22"
         to_port: "22"
+        group_id: "{{ public_sg_id }}"
+      - proto: "http"
+        from_port: "80"
+        to_port: "80"
         group_id: "{{ public_sg_id }}"
   register: private_sg
 
