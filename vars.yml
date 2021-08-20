@@ -19,7 +19,7 @@ public_subnet_b_cidr:  "10.0.2.0/24"
 #ec2 information for bastion and web instances
 webserver_key_name: web
 instance_type: t2.micro
-image: ami-0ac43988dfd31ab9a
+image: ami-0a8e758f5e873d1c1
 
 # Database information
 db_username: admin

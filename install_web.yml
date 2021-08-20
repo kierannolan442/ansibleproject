@@ -1,4 +1,33 @@
 # Install Nginx using Ansible
 # Start and Enable Nginx
 # Check the status of Nginx
+---
+- hosts: _Prod
+  remote_user: ubuntu
+  become: yes
+  vars_files:
+   - vars.yml
+  vars:
+   ansible_ssh_private_key_file: "web.pem"
+  tasks:
+    - name: update
+      apt: update_cache=yes
 
+    - name: ensure nginx is at the latest version
+      apt: name=nginx state=latest
+
+    - name: start nginx
+      service:
+        name: nginx
+        state: started
+
+    - name: copy index page
+      git:
+       repo: 'https://github.com/kierannolan442/webapp.git'
+       dest: /usr/share/nginx/html/index.html
+
+  handlers:
+    - name: restart nginx
+      service: 
+        name: nginx
+        state: restarted
