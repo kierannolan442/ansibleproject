@@ -6,12 +6,11 @@
     instance_name: AnsibleDB
     db_engine: MySQL
     port: 3306
-    size: 20
+    size: 5
     publicly_accessible: false
     instance_type: db.t2.micro
     username: admin
     password: password
-    aws_access_key:   "{{ aws_access_key }}"
-    aws_secret_key:   "{{ aws_secret_key }}"
     region: "{{ aws_region }}"
   register: ansible_rds
+

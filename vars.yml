@@ -14,12 +14,13 @@ sg_ip:          "0.0.0.0"
 
 # Subnets
 public_subnet_a_cidr:  "10.0.0.0/24"
-private_subnet_a_cidr: "10.0.1.0/24"
 public_subnet_b_cidr:  "10.0.2.0/24"
-private_subnet_b_cidr: "10.0.3.0/24"
 
 #ec2 information for bastion and web instances
 webserver_key_name: web
-bastion_key_name: bastion
 instance_type: t2.micro
 image: ami-0ac43988dfd31ab9a
+
+# Database information
+db_username: admin
+db_password: password

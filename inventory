@@ -8,5 +8,3 @@ localhost ansible_connection=local
 ansible_ssh_private_key_file=keys/bastion.pem
 
 [webserver]
-ec2-52-215-58-167.eu-west-1.compute.amazonaws.com
-ec2-54-229-52-198.eu-west-1.compute.amazonaws.com
