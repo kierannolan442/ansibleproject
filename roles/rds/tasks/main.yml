@@ -12,5 +12,7 @@
     username: admin
     password: password
     region: "{{ aws_region }}"
-  register: ansible_rds
+  register: rds
 
+- ansible.builtin.debug:
+    msg: "{{ rds.instance.endpoint }}"

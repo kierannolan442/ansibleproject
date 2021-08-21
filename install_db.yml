@@ -1,0 +1,13 @@
+# Install Nginx using Ansible
+# Start and Enable Nginx
+# Check the status of Nginx
+---
+- hosts: db
+  tasks:
+    - name: add data to db
+      copy: src=create.sql dest=/tmp/dump.sql
+
+    - name: insert into database
+      mysql_db: name=ansibleDB state=import target=/tmp/create.sql login_user=admin login_password=password
+
+

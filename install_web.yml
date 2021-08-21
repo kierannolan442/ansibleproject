@@ -10,24 +10,27 @@
   vars:
    ansible_ssh_private_key_file: "web.pem"
   tasks:
-    - name: update
-      apt: update_cache=yes
+    - name: install httpd
+      package:
+        name: "httpd"
+        state: present
 
-    - name: ensure nginx is at the latest version
-      apt: name=nginx state=latest
+    - name: document root directory
+      file:
+       state: directory
+       dest: "var/www/project"
+       
+    - name: configure web server
+      template:
+        dest: /etc/httpd/conf.d/project.conf
+        src: templates/localconf.conf.j2
 
-    - name: start nginx
-      service:
-        name: nginx
-        state: started
+    - name: clone web page
+      get_url:
+       dest: "/var/www/project"
+       url: "https://raw.githubusercontent.com/kierannolan442/webapp/main/index.html"
 
-    - name: copy index page
-      git:
-       repo: 'https://github.com/kierannolan442/webapp.git'
-       dest: /usr/share/nginx/html/index.html
-
-  handlers:
-    - name: restart nginx
-      service: 
-        name: nginx
-        state: restarted
+   - name: service httpd
+     service:
+       name: "httpd"
+       state: started

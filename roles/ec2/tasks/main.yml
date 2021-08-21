@@ -5,7 +5,8 @@
     name: vpc
   vars:
     public_subnet_a: public_subnet_a.subnet.id
-    public_subnet_b: public_subnet_b.subnet.id        
+    public_subnet_b: public_subnet_b.subnet.id
+    public_sg_id: public_sg.group_id     
 
 
 
@@ -17,6 +18,7 @@
     instance_type: "{{ instance_type }}"
     image: "{{ image }}"
     vpc_subnet_id: "{{ public_subnet_a.subnet.id }}"
+    group_id: "{{ public_sg.group_id }}"
     wait: yes
     region: "{{ aws_region }}"           
     aws_access_key: "{{ aws_access_key }}"
@@ -37,6 +39,7 @@
     image: "{{ image }}"
     vpc_subnet_id: "{{ public_subnet_b.subnet.id }}"
     wait: yes
+    group_id: "{{ public_sg.group_id }}"
     region: "{{ aws_region }}"           
     aws_access_key: "{{ aws_access_key }}"
     aws_secret_key: "{{ aws_secret_key }}"
