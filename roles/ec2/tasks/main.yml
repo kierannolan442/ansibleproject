@@ -7,47 +7,85 @@
     public_subnet_a: public_subnet_a.subnet.id
     public_subnet_b: public_subnet_b.subnet.id
     public_sg_id: public_sg.group_id     
-
+    vpc_id: project_vpc.vpc.id
 
 
 
 #Webserver instances
-- name: Create Availability Zone A Webserver
-  ec2:
-    key_name: "{{ webserver_key_name }}"
-    instance_type: "{{ instance_type }}"
-    image: "{{ image }}"
-    vpc_subnet_id: "{{ public_subnet_a.subnet.id }}"
-    group_id: "{{ public_sg.group_id }}"
-    wait: yes
-    region: "{{ aws_region }}"           
-    aws_access_key: "{{ aws_access_key }}"
-    aws_secret_key: "{{ aws_secret_key }}"
-    assign_public_ip: yes
-    exact_count: 1
-    count_tag:
-       Name: webserverA
-    instance_tags:
-       Name: webserverA
-       Environment: Prod
-  register: project_web_a
+#- name: Create Availability Zone A Webserver
+# ec2:
+#   key_name: "{{ webserver_key_name }}"
+#   instance_type: "{{ instance_type }}"
+#   image: "{{ image }}"
+#   vpc_subnet_id: "{{ public_subnet_a.subnet.id }}"
+#   group_id: "{{ public_sg.group_id }}"
+#   wait: yes
+#   region: "{{ aws_region }}"           
+#   aws_access_key: "{{ aws_access_key }}"
+#   aws_secret_key: "{{ aws_secret_key }}"
+#   assign_public_ip: yes
+#   exact_count: 1
+#   count_tag:
+#      Name: webserverA
+#   instance_tags:
+#      Name: webserverA
+#      Environment: Prod
+# register: project_web_a
 
-- name: Create Availability Zone B webserver
-  ec2:
-    key_name: "{{ webserver_key_name }}"
-    instance_type: "{{ instance_type }}"
-    image: "{{ image }}"
-    vpc_subnet_id: "{{ public_subnet_b.subnet.id }}"
-    wait: yes
-    group_id: "{{ public_sg.group_id }}"
-    region: "{{ aws_region }}"           
-    aws_access_key: "{{ aws_access_key }}"
-    aws_secret_key: "{{ aws_secret_key }}"
-    assign_public_ip: yes
-    exact_count: 1
-    count_tag:
-       Name: webserverB
-    instance_tags:
-       Name: webserverB
-       Environment: Prod
-  register: project_web_b
+#- name: Create Availability Zone B webserver
+#   ec2:
+#   key_name: "{{ webserver_key_name }}"
+#   instance_type: "{{ instance_type }}"
+#   image: "{{ image }}"
+#   vpc_subnet_id: "{{ public_subnet_b.subnet.id }}"
+#   wait: yes
+#   group_id: "{{ public_sg.group_id }}"
+#   region: "{{ aws_region }}"           
+#   aws_access_key: "{{ aws_access_key }}"
+#   aws_secret_key: "{{ aws_secret_key }}"
+#   assign_public_ip: yes
+#   exact_count: 1
+#   count_tag:
+#      Name: webserverB
+#   instance_tags:
+#      Name: webserverB
+#      Environment: Prod
+# register: project_web_b
+
+ #Target Group
+- name: Target Group
+  elb_target_group:
+    name: default
+    protocol: http
+    port: 80
+    vpc_id: "{{ project_vpc.vpc.id }}"
+    state: present
+
+ #Application Load Balancer
+- name: Create HTTP load balancer
+  elb_application_lb:
+    state: present
+    name: ansibleLB
+    subnets:
+      - "{{ public_subnet_a.subnet.id }}"
+      - "{{ public_subnet_b.subnet.id }}"
+    security_groups:
+      - "{{ public_sg.group_id }}"
+    listeners:
+      - Protocol: HTTP
+        Port: 80
+        DefaultActions:
+          - Type: forward
+            TargetGroupName: default
+#Auto-Scaling Group
+- name: ASG 
+  ec2_asg:
+    name: ansibleASG
+    launch_config_name: ansibleLC
+    min_size: 1
+    max_size: 3
+    desired_capacity: 2
+    region: "{{ aws_region }}"
+    vpc_zone_identifier: ["{{ public_subnet_a.subnet.id }}", "{{ public_subnet_b.subnet.id }}"]
+    tags:
+      - Environment: Prod
