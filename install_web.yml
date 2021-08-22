@@ -10,27 +10,39 @@
   vars:
    ansible_ssh_private_key_file: "web.pem"
   tasks:
-    - name: install httpd
-      package:
-        name: "httpd"
-        state: present
 
-    - name: document root directory
-      file:
+   - name: install apache2
+     apt: name=apache2 update_cache=yes state=latest
+
+   - name: Create document root
+     file:
+       path: "/var/www/{{ http_host }}"
        state: directory
-       dest: "var/www/project"
-       
-    - name: configure web server
-      template:
-        dest: /etc/httpd/conf.d/project.conf
-        src: templates/localconf.conf.j2
+       mode: '0775'
 
-    - name: clone web page
-      get_url:
-       dest: "/var/www/project"
-       url: "https://raw.githubusercontent.com/kierannolan442/webapp/main/index.html"
+   - name: Copy index page j2
+     template:
+       src: "apache/index.html.j2"
+       dest: "/var/www/{{ http_host }}/index.html"
 
-   - name: service httpd
-     service:
-       name: "httpd"
-       state: started
+   - name: Copy index page
+     template:
+       src: "apache/index.html"
+       dest: "/var/www/html/index.html"
+   - name: Set up VirtualHost
+     template:
+       src: "apache/apache.conf.j2"
+       dest: "/etc/apache2/sites-available/{{ http_conf }}"
+     notify: restart-apache
+
+   - name: Port firewall
+     ufw:
+       rule: allow
+       port: "{{ http_port }}"
+       proto: tcp
+
+  handlers:
+    - name: restart-apache
+      service:
+        name: apache2
+        state: restarted

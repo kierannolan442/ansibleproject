@@ -21,6 +21,11 @@ webserver_key_name: web
 instance_type: t2.micro
 image: ami-0a8e758f5e873d1c1
 
+#HTTP Info
+http_host: "mydomain.local"
+http_conf: "mydomain.conf"
+http_port: "80"
+
 # Database information
 db_username: admin
 db_password: password
