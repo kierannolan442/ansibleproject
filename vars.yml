@@ -1,8 +1,8 @@
 ---
 
 # AWS Credentials & region
-aws_access_key: "AKIAZFFEJ3XQFPLX2KXC"
-aws_secret_key: "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"
+aws_access_key: ""
+aws_secret_key: ""
 aws_region:     "eu-west-1"
 
 # VPC Name & IP block
@@ -28,4 +28,4 @@ http_port: "80"
 
 # Database information
 db_username: admin
-db_password: password
+db_password: 
