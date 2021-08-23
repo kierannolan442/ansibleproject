@@ -1,0 +1,49 @@
+---
+- hosts: _Docker
+  become: true
+  vars_files:
+    - vars.yml
+  vars:
+    ansible_ssh_private_key_file: "web.pem"
+  tasks:
+          #- name: Install aptitude
+          #apt: name=aptitude state=latest update_cache=yes
+
+          #- name: Install packages
+          # apt: name={{item}} state=latest update_cache=yes
+          #with_items:
+          #- apt-transport-https
+          #- ca-certificates
+          #- curl
+          #- software-properties-common
+          #- python3-pip
+          #- virtualenv
+          #- python3-setuptools
+    
+    - name: docker key
+      apt_key:
+        url: deb https://download.docker.com/linux/ubuntu/gpg
+        state: present
+    - name: add docker repo
+      apt_repository:
+        repo: https://download.docker.com/linux/ubuntu
+    - name: install docker-ce
+      apt: update_cache=yes name={{item}} state=latest
+      with_items:
+        - docker-ce
+        - docker-ce-cli
+        - containerd.io
+    - name: docker python
+      pip:
+        name: docker
+    - name: pull docker image
+      docker_image:
+        name: ubuntu
+        source: pull
+
+    - name: launch containers
+      docker_container:
+        name: docker
+        image: ubuntu
+        state: present
+      with_sequence: count=2

@@ -1,0 +1,25 @@
+---
+- hosts: _Prod
+  remote_user: ec2-user
+  become: yes
+  vars_files:
+    - vars.yml
+  vars:
+    ansible_ssh_private_key_file: "web.pem"
+  tasks:
+    - name: install haproxy
+      yum: name=haproxy state=present
+
+    - name: configure haproxy
+      template: src=haproxy.cfg.j2 dest=/etc/haproxy/haproxy.cfg
+      notify: reload haproxy
+
+    - name: start haproxy
+      service: name=haproxy state=running
+
+  handlers:
+    - name: restart haproxy
+      service: name=haproxy state=restarted
+
+    - name: reload
+      service: name=haproxy state=reloaded

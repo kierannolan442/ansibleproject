@@ -1,0 +1,9 @@
+---
+#Create Codecommit repo
+- name: Codecommit repo
+  aws_codecommit:
+    name: projectrepo
+    state: present
+    region: "{{ aws_region }}"
+  register: create_repo
+  tags: create_eb

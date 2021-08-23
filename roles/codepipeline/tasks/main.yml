@@ -1,0 +1,54 @@
+---
+- name: create pipeline
+  aws_codepipeline:
+    name: testpipeline
+    role_arn: "arn:aws:iam::629557288416:policy/assumeroleproj"
+    artifact_store:
+      type: S3
+      location: nodex00136114
+    stages:
+      - name: Get_source
+        actions:
+          -
+           name: CodeCommit
+           actionTypeId:
+             category: Source
+             owner: AWS
+             provider: CodeCommit
+             version: '1'
+           configuration:
+             Repository_Name:
+             BranchName: master
+           outputArtifacts:
+             - name: SourceArtifact 
+           runOrder: 1
+          - name: Build
+            actions:
+              -
+               name: CodeBuild
+               actionTypeId:
+                 category: Build
+                 owner: AWS
+                 provider: CodeBuild
+                 version: '1'
+                 inputArtifacts:
+                   - name: SourceArtifact
+                 outputArtifacts:
+                   - name: BuildArtifact
+                 configuration:
+                   ProjectName: "build"
+                 runOrder: 1
+          - name: Deploy
+            actions:
+              - name: DeployECS
+                actionTypeId:
+                  category: Deploy
+                  owner: AWS
+                  provider: ECS
+                  version: '1'
+                inputArtifacts:
+                  - name: BuildArtifact
+                configuration:
+                  ClusterName: "projectCluster"
+                  ServiceName: "service-sample"
+                  
